@@ -4,6 +4,19 @@ FitLog is a modern, dark-themed gym companion web application built with **Next.
 
 ---
 
+## 📸 Screenshots & Previews
+
+### 🏋️ 1. Workout Library (Home Page)
+![Workout Library Preview](assets/preview-home.png)
+
+### 📋 2. Workout Details Page
+![Workout Details Preview](assets/preview-details.png)
+
+### 📊 3. My Plan Dashboard
+![My Plan Preview](assets/preview-plan.png)
+
+---
+
 ## 🔗 Project Links
 
 - **Live Demo Link:** *(Add your deployed link here)*
