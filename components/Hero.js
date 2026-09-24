@@ -24,9 +24,22 @@ const Hero = () => {
 
             <Link
               href="#library"
-              className="inline-flex items-center justify-center bg-[#c2f800] hover:bg-[#b2e600] text-black font-bold text-xs sm:text-sm px-6 py-3 rounded-lg uppercase tracking-wider transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] mt-2 shadow-[0_0_20px_rgba(194,248,0,0.15)]"
+              className="inline-flex items-center justify-center gap-2 bg-[#c2f800] hover:bg-[#b2e600] text-black font-bold text-xs sm:text-sm px-6 py-3 rounded-lg uppercase tracking-wider transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] mt-2 shadow-[0_0_20px_rgba(194,248,0,0.15)]"
             >
-              BROWSE WORKOUTS
+              <span>BROWSE WORKOUTS</span>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                />
+              </svg>
             </Link>
           </div>
 
