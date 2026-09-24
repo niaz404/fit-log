@@ -16,9 +16,15 @@ const oswald = Oswald({
 });
 
 export const metadata = {
-  title: "FitLog — Workout Library",
+  title: "FitLog — Workout Library & Gym Companion",
   description:
     "Explore 12 major lifts covering every muscle group. Plan today's workout, track intensity, and stay consistent with FitLog.",
+  icons: {
+    icon: "/favicon.ico",
+  },
+  keywords: ["gym", "workout", "fitness log", "exercise planner", "lifts"],
+  authors: [{ name: "FitLog" }],
+  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({ children }) {
