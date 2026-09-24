@@ -2,12 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useWorkout } from "@/context/WorkoutContext";
 
-const Navbar = ({ planCount = 0, savedCount = 0 }) => {
+const Navbar = () => {
   const pathname = usePathname();
+  const { plan, saved, isLoaded } = useWorkout();
 
   const isWorkoutsActive = pathname === "/" || pathname.startsWith("/workout");
   const isMyPlanActive = pathname === "/my-plan";
+
+  const planCount = isLoaded ? plan.length : 0;
+  const savedCount = isLoaded ? saved.length : 0;
 
   return (
     <header className="sticky top-0 z-50 w-full h-[72px] sm:h-[81px] bg-[#0c0d10]/95 backdrop-blur-md border-b border-[#1c1f26]">

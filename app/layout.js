@@ -2,6 +2,8 @@ import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Toast from "@/components/Toast";
+import { WorkoutProvider } from "@/context/WorkoutContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,9 +28,12 @@ export default function RootLayout({ children }) {
       className={`${inter.variable} ${oswald.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-[#0c0d10] text-[#ededed] font-sans antialiased selection:bg-[#c2f800] selection:text-black">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <WorkoutProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <Toast />
+        </WorkoutProvider>
       </body>
     </html>
   );
