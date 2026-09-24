@@ -1,8 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const WorkoutCard = ({ workout }) => {
   return (
-    <div className="bg-[#12141a] border border-[#1e222b] rounded-2xl overflow-hidden flex flex-col transition-all duration-300">
+    <Link
+      href={`/workout/${workout.id}`}
+      className="group bg-[#12141a] border border-[#1e222b] hover:border-[#2f384a] rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.5)]"
+    >
       <div className="relative w-full h-48 sm:h-52 bg-[#181b22] overflow-hidden">
         {workout.image ? (
           <Image
@@ -10,7 +14,7 @@ const WorkoutCard = ({ workout }) => {
             alt={workout.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-[#4b5563]">
@@ -34,7 +38,7 @@ const WorkoutCard = ({ workout }) => {
             </div>
           )}
 
-          <h3 className="font-['Oswald',sans-serif] font-bold text-lg sm:text-xl uppercase text-white tracking-wide mt-1">
+          <h3 className="font-['Oswald',sans-serif] font-bold text-lg sm:text-xl uppercase text-white tracking-wide group-hover:text-[#c2f800] transition-colors mt-1">
             {workout.name}
           </h3>
 
@@ -90,7 +94,7 @@ const WorkoutCard = ({ workout }) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
