@@ -5,9 +5,9 @@ import { useWorkout } from "@/context/WorkoutContext";
 const WorkoutDetailActions = ({ workout }) => {
   const { addToPlan, saveWorkout, plan, saved } = useWorkout();
 
-  // Simple boolean checks
-  const isAlreadyInPlan = plan.some((item) => item.id === workout.id);
-  const isAlreadySaved = saved.some((item) => item.id === workout.id);
+  // Safe string ID comparison
+  const isAlreadyInPlan = plan.some((item) => String(item.id) === String(workout.id));
+  const isAlreadySaved = saved.some((item) => String(item.id) === String(workout.id));
 
   return (
     <div className="flex flex-wrap items-center gap-3 pt-2">

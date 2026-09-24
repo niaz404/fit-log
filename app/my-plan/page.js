@@ -165,7 +165,7 @@ export default function MyPlanPage() {
       ) : (
         <div className="flex flex-col gap-4">
           {sortedList.map((workout) => {
-            const isDone = completed.includes(workout.id);
+            const isDone = completed.some((id) => String(id) === String(workout.id));
 
             return (
               <div

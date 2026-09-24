@@ -2,42 +2,61 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 
-// 1. Create the Context
 export const WorkoutContext = createContext();
 
-// 2. Create the Provider Component
 export const WorkoutProvider = ({ children }) => {
-  // Simple states
   const [plan, setPlan] = useState([]);
   const [saved, setSaved] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [toastMessage, setToastMessage] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load saved data when the website opens
+  // 1. Load data from localStorage on initial client mount
   useEffect(() => {
-    const savedPlan = localStorage.getItem("my_plan");
-    const savedLifts = localStorage.getItem("my_saved");
-    const savedDone = localStorage.getItem("my_completed");
+    try {
+      const savedPlan = localStorage.getItem("fitlog_plan");
+      const savedLifts = localStorage.getItem("fitlog_saved");
+      const savedDone = localStorage.getItem("fitlog_completed");
 
-    if (savedPlan) setPlan(JSON.parse(savedPlan));
-    if (savedLifts) setSaved(JSON.parse(savedLifts));
-    if (savedDone) setCompleted(JSON.parse(savedDone));
+      if (savedPlan) setPlan(JSON.parse(savedPlan));
+      if (savedLifts) setSaved(JSON.parse(savedLifts));
+      if (savedDone) setCompleted(JSON.parse(savedDone));
+    } catch (error) {
+      console.error("Error reading localStorage:", error);
+    } finally {
+      setIsLoaded(true);
+    }
   }, []);
 
-  // Save to localStorage whenever plan changes
+  // 2. Save data to localStorage ONLY after initial load has finished
   useEffect(() => {
-    localStorage.setItem("my_plan", JSON.stringify(plan));
-  }, [plan]);
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem("fitlog_plan", JSON.stringify(plan));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [plan, isLoaded]);
 
   useEffect(() => {
-    localStorage.setItem("my_saved", JSON.stringify(saved));
-  }, [saved]);
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem("fitlog_saved", JSON.stringify(saved));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [saved, isLoaded]);
 
   useEffect(() => {
-    localStorage.setItem("my_completed", JSON.stringify(completed));
-  }, [completed]);
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem("fitlog_completed", JSON.stringify(completed));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [completed, isLoaded]);
 
-  // Helper function to show popup message
+  // Helper for popup messages
   const showToast = (message) => {
     setToastMessage(message);
     setTimeout(() => {
@@ -45,62 +64,60 @@ export const WorkoutProvider = ({ children }) => {
     }, 3000);
   };
 
-  // Function to Add workout to Today's Plan
+  // Add to today's plan (with 5 lift limit)
   const addToPlan = (workout) => {
-    // Check if already added
-    const alreadyExists = plan.some((item) => item.id === workout.id);
-    if (alreadyExists) {
+    if (!workout) return;
+    const exists = plan.some((item) => String(item.id) === String(workout.id));
+    if (exists) {
       showToast("Already in today's plan!");
       return;
     }
 
-    // Check 5 workout limit
     if (plan.length >= 5) {
       showToast("You can only add up to 5 lifts for today!");
       return;
     }
 
-    // Add to plan list
-    setPlan([...plan, workout]);
+    setPlan((prev) => [...prev, workout]);
     showToast("Added to today's plan!");
   };
 
-  // Function to Remove workout from Today's Plan
+  // Remove from plan
   const removeFromPlan = (id) => {
-    const updatedPlan = plan.filter((item) => item.id !== id);
-    setPlan(updatedPlan);
-
-    // Also remove from completed if it was done
-    setCompleted(completed.filter((itemId) => itemId !== id));
+    setPlan((prev) => prev.filter((item) => String(item.id) !== String(id)));
+    setCompleted((prev) => prev.filter((itemId) => String(itemId) !== String(id)));
     showToast("Removed from today's plan");
   };
 
-  // Function to Save for Later
+  // Save for later
   const saveWorkout = (workout) => {
-    const alreadySaved = saved.some((item) => item.id === workout.id);
-    if (alreadySaved) {
-      showToast("Already saved!");
+    if (!workout) return;
+    const exists = saved.some((item) => String(item.id) === String(workout.id));
+    if (exists) {
+      showToast("Already in saved lifts!");
       return;
     }
 
-    setSaved([...saved, workout]);
+    setSaved((prev) => [...prev, workout]);
     showToast("Saved for later!");
   };
 
-  // Function to Remove from Saved
+  // Remove from saved
   const removeSaved = (id) => {
-    const updatedSaved = saved.filter((item) => item.id !== id);
-    setSaved(updatedSaved);
+    setSaved((prev) => prev.filter((item) => String(item.id) !== String(id)));
     showToast("Removed from saved list");
   };
 
-  // Function to Mark as Done / Incomplete
+  // Toggle completed status
   const toggleCompleted = (id) => {
-    if (completed.includes(id)) {
-      setCompleted(completed.filter((itemId) => itemId !== id));
+    const stringId = String(id);
+    const isDone = completed.some((item) => String(item) === stringId);
+
+    if (isDone) {
+      setCompleted((prev) => prev.filter((item) => String(item) !== stringId));
       showToast("Marked as incomplete");
     } else {
-      setCompleted([...completed, id]);
+      setCompleted((prev) => [...prev, id]);
       showToast("Workout marked as done!");
     }
   };
@@ -112,6 +129,7 @@ export const WorkoutProvider = ({ children }) => {
         saved,
         completed,
         toastMessage,
+        isLoaded,
         addToPlan,
         removeFromPlan,
         saveWorkout,
@@ -124,7 +142,6 @@ export const WorkoutProvider = ({ children }) => {
   );
 };
 
-// 3. Custom Hook to easily use the context
 export const useWorkout = () => {
   return useContext(WorkoutContext);
 };
