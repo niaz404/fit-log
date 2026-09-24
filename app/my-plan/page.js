@@ -12,6 +12,7 @@ export default function MyPlanPage() {
     plan,
     saved,
     completed,
+    addToPlan,
     removeFromPlan,
     removeSaved,
     toggleCompleted,
@@ -166,6 +167,7 @@ export default function MyPlanPage() {
         <div className="flex flex-col gap-4">
           {sortedList.map((workout) => {
             const isDone = completed.some((id) => String(id) === String(workout.id));
+            const isAlreadyInPlan = plan.some((item) => String(item.id) === String(workout.id));
 
             return (
               <div
@@ -317,26 +319,41 @@ export default function MyPlanPage() {
                       </button>
                     </>
                   ) : (
-                    <button
-                      type="button"
-                      onClick={() => removeSaved(workout.id)}
-                      title="Remove from saved"
-                      className="w-8 h-8 rounded-full bg-[#181d26] hover:bg-[#281517] text-[#9ca3af] hover:text-[#ef4444] border border-[#232936] hover:border-[#ef4444]/40 flex items-center justify-center transition-all"
-                    >
-                      <svg
-                        className="w-3.5 h-3.5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => addToPlan(workout)}
+                        disabled={isAlreadyInPlan}
+                        className={`text-xs font-bold px-4 py-2 rounded-full transition-all ${
+                          isAlreadyInPlan
+                            ? "bg-[#1a2312] text-[#c2f800] border border-[#c2f800]/40 opacity-80"
+                            : "bg-[#c2f800] hover:bg-[#b2e600] text-black"
+                        }`}
                       >
-                        <path
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
+                        {isAlreadyInPlan ? "In Plan" : "Add to Plan"}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => removeSaved(workout.id)}
+                        title="Remove from saved"
+                        className="w-8 h-8 rounded-full bg-[#181d26] hover:bg-[#281517] text-[#9ca3af] hover:text-[#ef4444] border border-[#232936] hover:border-[#ef4444]/40 flex items-center justify-center transition-all"
+                      >
+                        <svg
+                          className="w-3.5 h-3.5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
